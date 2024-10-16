@@ -5,11 +5,9 @@ import 'package:gps_tracker/domain/entities/attributes.dart';
 import 'package:gps_tracker/domain/entities/command.dart';
 import 'package:gps_tracker/domain/entities/device.dart';
 import 'package:gps_tracker/presentation/extensions/build_context_extension.dart';
-import 'package:gps_tracker/presentation/extensions/command_extension.dart';
 import 'package:gps_tracker/presentation/misc/colors.dart';
 import 'package:gps_tracker/presentation/misc/screen.dart';
 import 'package:gps_tracker/presentation/misc/typography.dart';
-import 'package:gps_tracker/presentation/misc/utils.dart';
 import 'package:gps_tracker/presentation/providers/api/device_command_provider.dart';
 import 'package:gps_tracker/presentation/providers/api/saved_commands_provider.dart';
 import 'package:gps_tracker/presentation/widgets/button/custom_button.dart';
@@ -71,7 +69,6 @@ class _DevicePageState extends ConsumerState<DevicePage> {
             if (data != null) {
               context.showSnackBar("Success send command to ${widget.device.name}");
               _clearData();
-              
             }
           },
           error: (error, stackTrace) {
@@ -153,11 +150,13 @@ class _DevicePageState extends ConsumerState<DevicePage> {
                                 controller: _indexController,
                                 label: "Index",
                                 keyboardType: TextInputType.number,
+                                textInputAction: TextInputAction.next,
                               ),
                               const SizedBox(height: 16),
                               UgCommandTextField(
                                 controller: _dataController,
                                 label: "Data",
+                                textInputAction: TextInputAction.go,
                               ),
                             ],
                           ),
@@ -190,8 +189,6 @@ class _DevicePageState extends ConsumerState<DevicePage> {
                                 index: int.parse(_indexController.text),
                                 data: _dataController.text,
                               );
-
-                              printIfDebug(newAttributes.toJson());
 
                               commandData = _selectedCommand?.copyWith(
                                 type: _selectedType,

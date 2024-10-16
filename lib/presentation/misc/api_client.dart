@@ -24,12 +24,12 @@ class ApiClient {
     }
 
     _dio.interceptors.add(PrettyDioLogger(
-      error: false,
-      requestHeader: false,
-      requestBody: false,
-      responseHeader: false,
+      error: true,
+      requestHeader: true,
+      requestBody: true,
+      responseHeader: true,
       responseBody: true,
-      request: false,
+      request: true,
     ));
   }
 
