@@ -1,24 +1,24 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'router_provider.dart';
+part of 'send_command_provider.dart';
 
 // **************************************************************************
 // RiverpodGenerator
 // **************************************************************************
 
-String _$routerHash() => r'293632aeaed438770e9332497d9e73cf9c3bbdb2';
+String _$sendCommandHash() => r'3d0a29c41c1802358d607e4525f4b6458d15a934';
 
-/// See also [router].
-@ProviderFor(router)
-final routerProvider = Provider<Raw<GoRouter>>.internal(
-  router,
-  name: r'routerProvider',
+/// See also [sendCommand].
+@ProviderFor(sendCommand)
+final sendCommandProvider = AutoDisposeProvider<SendCommand>.internal(
+  sendCommand,
+  name: r'sendCommandProvider',
   debugGetCreateSourceHash:
-      const bool.fromEnvironment('dart.vm.product') ? null : _$routerHash,
+      const bool.fromEnvironment('dart.vm.product') ? null : _$sendCommandHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
 
-typedef RouterRef = ProviderRef<Raw<GoRouter>>;
+typedef SendCommandRef = AutoDisposeProviderRef<SendCommand>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

@@ -1,4 +1,5 @@
 import 'package:go_router/go_router.dart';
+import 'package:gps_tracker/domain/entities/device.dart';
 import 'package:gps_tracker/presentation/misc/app_routes.dart';
 import 'package:gps_tracker/presentation/pages/device/device_page.dart';
 import 'package:gps_tracker/presentation/pages/login/login_page.dart';
@@ -36,7 +37,7 @@ Raw<GoRouter> router(RouterRef ref) => GoRouter(
           path: Routes.DEVICE,
           name: "device",
           builder: (context, state) {
-            return const DevicePage();
+            return DevicePage(device: state.extra as Device);
           },
         ),
       ],

@@ -1,16 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gps_tracker/domain/entities/device.dart';
+import 'package:gps_tracker/presentation/misc/app_routes.dart';
 import 'package:gps_tracker/presentation/misc/colors.dart';
 import 'package:gps_tracker/presentation/misc/typography.dart';
 import 'package:gps_tracker/presentation/misc/utils.dart';
+import 'package:gps_tracker/presentation/providers/routes/router_provider.dart';
 
-class DeviceListItem extends StatelessWidget {
+class DeviceListItem extends ConsumerWidget {
   final Device device;
 
   const DeviceListItem({super.key, required this.device});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     // Extracting the needed data
     final String name = device.name;
     final String uniqueId = device.uniqueId;
@@ -42,7 +45,7 @@ class DeviceListItem extends StatelessWidget {
           subtitleColor = AppColors.secondarySoft; // Color for last update
         }
 
-        if (device.status != 'online') {
+        if (device.status == 'offline') {
           subtitleColor = Colors.red;
         }
       } else {
@@ -54,7 +57,7 @@ class DeviceListItem extends StatelessWidget {
     return ListTile(
       onTap: () {
         if (!device.disabled!) {
-          printIfDebug(device.name);
+          ref.read(routerProvider).push(Routes.DEVICE, extra: device);
         }
       },
       leading: CircleAvatar(
