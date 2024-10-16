@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -78,6 +80,8 @@ class _DevicePageState extends ConsumerState<DevicePage> {
         );
       },
     );
+
+    log("${widget.device.id}");
 
     return Scaffold(
       appBar: AppBar(
@@ -198,7 +202,8 @@ class _DevicePageState extends ConsumerState<DevicePage> {
                               commandData = _selectedCommand;
                             }
                             if (commandData != null) {
-                              ref.read(deviceCommandProvider.notifier).sendCommand(command: commandData);
+                              Command data = commandData.copyWith(deviceId: widget.device.id);
+                              ref.read(deviceCommandProvider.notifier).sendCommand(command: data);
                             }
                           },
                         ),
