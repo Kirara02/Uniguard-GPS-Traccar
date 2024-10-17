@@ -8,6 +8,7 @@ import 'package:gps_tracker/presentation/misc/typography.dart';
 import 'package:gps_tracker/presentation/providers/routes/router_provider.dart';
 import 'package:gps_tracker/presentation/providers/user_data/user_data_provider.dart';
 import 'package:gps_tracker/presentation/widgets/button/custom_button.dart';
+import 'package:gps_tracker/presentation/widgets/dialog/loading_dialog.dart';
 import 'package:gps_tracker/presentation/widgets/text_field/ug_text_field.dart';
 
 class LoginPage extends ConsumerStatefulWidget {
@@ -35,11 +36,15 @@ class _LoginPageState extends ConsumerState<LoginPage> {
       userDataProvider,
       (previous, next) {
         if (next is AsyncData) {
+          hideLoadingDialog(context);
           if (next.value != null) {
             ref.read(routerProvider).go(Routes.MAIN);
           }
         } else if (next is AsyncError) {
+          hideLoadingDialog(context);
           context.showSnackBar(next.error.toString());
+        } else if (next.isLoading) {
+          showLoadingDialog(context);
         }
       },
     );

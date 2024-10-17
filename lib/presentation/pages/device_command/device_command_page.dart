@@ -11,6 +11,7 @@ import 'package:gps_tracker/presentation/misc/typography.dart';
 import 'package:gps_tracker/presentation/providers/api/device_command_provider.dart';
 import 'package:gps_tracker/presentation/providers/api/saved_commands_provider.dart';
 import 'package:gps_tracker/presentation/widgets/button/custom_button.dart';
+import 'package:gps_tracker/presentation/widgets/dialog/loading_dialog.dart';
 import 'package:gps_tracker/presentation/widgets/dropdown/ug_command_dropdown.dart';
 import 'package:gps_tracker/presentation/widgets/dropdown/ug_command_type_dropdown.dart';
 import 'package:gps_tracker/presentation/widgets/text_field/ug_command_text_field.dart';
@@ -73,15 +74,19 @@ class _DevicePageState extends ConsumerState<DeviceCommandPage> {
       (previous, next) {
         next.when(
           data: (data) {
+            hideLoadingDialog(context);
             if (data != null) {
               context.showSnackBar("Success send command to ${widget.device.name}");
               _clearData();
             }
           },
           error: (error, stackTrace) {
+            hideLoadingDialog(context);
             context.showSnackBar(error.toString());
           },
-          loading: () {},
+          loading: () {
+            showLoadingDialog(context);
+          },
         );
       },
     );
