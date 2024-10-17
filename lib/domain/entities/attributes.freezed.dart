@@ -20,8 +20,8 @@ Attributes _$AttributesFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$Attributes {
-  int get index => throw _privateConstructorUsedError;
-  String get data => throw _privateConstructorUsedError;
+  int? get index => throw _privateConstructorUsedError;
+  String? get data => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -35,7 +35,7 @@ abstract class $AttributesCopyWith<$Res> {
           Attributes value, $Res Function(Attributes) then) =
       _$AttributesCopyWithImpl<$Res, Attributes>;
   @useResult
-  $Res call({int index, String data});
+  $Res call({int? index, String? data});
 }
 
 /// @nodoc
@@ -51,18 +51,18 @@ class _$AttributesCopyWithImpl<$Res, $Val extends Attributes>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? index = null,
-    Object? data = null,
+    Object? index = freezed,
+    Object? data = freezed,
   }) {
     return _then(_value.copyWith(
-      index: null == index
+      index: freezed == index
           ? _value.index
           : index // ignore: cast_nullable_to_non_nullable
-              as int,
-      data: null == data
+              as int?,
+      data: freezed == data
           ? _value.data
           : data // ignore: cast_nullable_to_non_nullable
-              as String,
+              as String?,
     ) as $Val);
   }
 }
@@ -75,7 +75,7 @@ abstract class _$$AttributesImplCopyWith<$Res>
       __$$AttributesImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({int index, String data});
+  $Res call({int? index, String? data});
 }
 
 /// @nodoc
@@ -89,18 +89,18 @@ class __$$AttributesImplCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? index = null,
-    Object? data = null,
+    Object? index = freezed,
+    Object? data = freezed,
   }) {
     return _then(_$AttributesImpl(
-      index: null == index
+      index: freezed == index
           ? _value.index
           : index // ignore: cast_nullable_to_non_nullable
-              as int,
-      data: null == data
+              as int?,
+      data: freezed == data
           ? _value.data
           : data // ignore: cast_nullable_to_non_nullable
-              as String,
+              as String?,
     ));
   }
 }
@@ -108,15 +108,15 @@ class __$$AttributesImplCopyWithImpl<$Res>
 /// @nodoc
 @JsonSerializable()
 class _$AttributesImpl implements _Attributes {
-  _$AttributesImpl({required this.index, required this.data});
+  _$AttributesImpl({this.index, this.data});
 
   factory _$AttributesImpl.fromJson(Map<String, dynamic> json) =>
       _$$AttributesImplFromJson(json);
 
   @override
-  final int index;
+  final int? index;
   @override
-  final String data;
+  final String? data;
 
   @override
   String toString() {
@@ -151,16 +151,16 @@ class _$AttributesImpl implements _Attributes {
 }
 
 abstract class _Attributes implements Attributes {
-  factory _Attributes({required final int index, required final String data}) =
+  factory _Attributes({final int? index, final String? data}) =
       _$AttributesImpl;
 
   factory _Attributes.fromJson(Map<String, dynamic> json) =
       _$AttributesImpl.fromJson;
 
   @override
-  int get index;
+  int? get index;
   @override
-  String get data;
+  String? get data;
   @override
   @JsonKey(ignore: true)
   _$$AttributesImplCopyWith<_$AttributesImpl> get copyWith =>

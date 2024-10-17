@@ -7,7 +7,9 @@ import 'package:gps_tracker/domain/usecase/get_logged_in_user/get_logged_in_user
 import 'package:gps_tracker/domain/usecase/login/login.dart';
 import 'package:gps_tracker/domain/usecase/login/login_params.dart';
 import 'package:gps_tracker/domain/usecase/logout/logout.dart';
+import 'package:gps_tracker/presentation/enums/drawer_page.dart';
 import 'package:gps_tracker/presentation/providers/api/devices_provider.dart';
+import 'package:gps_tracker/presentation/providers/page/page_provider.dart';
 import 'package:gps_tracker/presentation/providers/usecases/get_logged_in_user_provider.dart';
 import 'package:gps_tracker/presentation/providers/usecases/login_provider.dart';
 import 'package:gps_tracker/presentation/providers/usecases/logout_provider.dart';
@@ -56,6 +58,8 @@ class UserData extends _$UserData {
     switch (result) {
       case Success(value: _):
         state = const AsyncData(null);
+        ref.read(pageProvider.notifier).state = DrawerPage.devices;
+
       case Failed(:final message):
         state = AsyncError(FlutterError(message), StackTrace.current);
         state = AsyncData(state.valueOrNull);

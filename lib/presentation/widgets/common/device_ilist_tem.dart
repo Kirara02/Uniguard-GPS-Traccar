@@ -4,7 +4,6 @@ import 'package:gps_tracker/domain/entities/device.dart';
 import 'package:gps_tracker/presentation/misc/app_routes.dart';
 import 'package:gps_tracker/presentation/misc/colors.dart';
 import 'package:gps_tracker/presentation/misc/typography.dart';
-import 'package:gps_tracker/presentation/misc/utils.dart';
 import 'package:gps_tracker/presentation/providers/routes/router_provider.dart';
 
 class DeviceListItem extends ConsumerWidget {

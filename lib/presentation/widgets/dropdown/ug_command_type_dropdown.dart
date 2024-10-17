@@ -3,14 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:gps_tracker/presentation/misc/colors.dart';
 import 'package:gps_tracker/presentation/misc/typography.dart';
 
-class UgCommandStringDropdown extends StatelessWidget {
+class UgCommandTypeDropdown extends StatelessWidget {
   final GlobalKey<DropdownSearchState>? dropdownKey;
   final String label;
-  final List<String> items;
-  final String? selectedItem;
-  final Function(String?)? onChanged;
+  final List<CommandType> items;
+  final CommandType? selectedItem;
+  final Function(CommandType?)? onChanged;
 
-  const UgCommandStringDropdown({
+  const UgCommandTypeDropdown({
     super.key,
     this.dropdownKey,
     required this.label,
@@ -21,10 +21,11 @@ class UgCommandStringDropdown extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return DropdownSearch<String>(
+    return DropdownSearch<CommandType>(
       key: dropdownKey,
       items: items,
       selectedItem: selectedItem,
+      itemAsString: (CommandType? type) => type?.text ?? '',
       onChanged: onChanged,
       dropdownDecoratorProps: DropDownDecoratorProps(
         dropdownSearchDecoration: InputDecoration(
@@ -55,4 +56,11 @@ class UgCommandStringDropdown extends StatelessWidget {
       ),
     );
   }
+}
+
+class CommandType {
+  final String text;
+  final String value;
+
+  CommandType({required this.text, required this.value});
 }

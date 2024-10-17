@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -14,27 +12,34 @@ import 'package:gps_tracker/presentation/providers/api/device_command_provider.d
 import 'package:gps_tracker/presentation/providers/api/saved_commands_provider.dart';
 import 'package:gps_tracker/presentation/widgets/button/custom_button.dart';
 import 'package:gps_tracker/presentation/widgets/dropdown/ug_command_dropdown.dart';
-import 'package:gps_tracker/presentation/widgets/dropdown/ug_command_string_dropdown.dart';
+import 'package:gps_tracker/presentation/widgets/dropdown/ug_command_type_dropdown.dart';
 import 'package:gps_tracker/presentation/widgets/text_field/ug_command_text_field.dart';
 
-class DevicePage extends ConsumerStatefulWidget {
+class DeviceCommandPage extends ConsumerStatefulWidget {
   final Device device;
-  const DevicePage({super.key, required this.device});
+  const DeviceCommandPage({super.key, required this.device});
 
   @override
-  ConsumerState<DevicePage> createState() => _DevicePageState();
+  ConsumerState<DeviceCommandPage> createState() => _DevicePageState();
 }
 
-class _DevicePageState extends ConsumerState<DevicePage> {
+class _DevicePageState extends ConsumerState<DeviceCommandPage> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final GlobalKey<DropdownSearchState> _dropdownSavedCmdKey = GlobalKey<DropdownSearchState>();
+  final GlobalKey<DropdownSearchState> _dropdownCmdTypeKey = GlobalKey<DropdownSearchState>();
 
   final TextEditingController _indexController = TextEditingController();
   final TextEditingController _dataController = TextEditingController();
 
   Command? _selectedCommand;
+  CommandType? _selectedType;
 
-  String? _selectedType;
+  List<CommandType> commandTypes = [
+    CommandType(text: "Engine Stop", value: "engineStop"),
+    CommandType(text: "Command Custom", value: "custom"),
+    CommandType(text: "Output Control", value: "outputControl"),
+    CommandType(text: "Engine Resume", value: "engineResume"),
+  ];
 
   @override
   void initState() {
@@ -80,8 +85,6 @@ class _DevicePageState extends ConsumerState<DevicePage> {
         );
       },
     );
-
-    log("${widget.device.id}");
 
     return Scaffold(
       appBar: AppBar(
@@ -135,33 +138,34 @@ class _DevicePageState extends ConsumerState<DevicePage> {
                           Column(
                             children: [
                               const SizedBox(height: 16),
-                              UgCommandStringDropdown(
+                              UgCommandTypeDropdown(
+                                dropdownKey: _dropdownCmdTypeKey,
                                 label: "Type",
                                 selectedItem: _selectedType,
-                                items: const [
-                                  "Matikan Mesin",
-                                  "Perintah Buatan",
-                                  "Kontrol Output",
-                                  "Hidupkan Mesin",
-                                ],
+                                items: commandTypes,
                                 onChanged: (value) {
+                                  _indexController.clear();
+                                  _dataController.clear();
                                   _selectedType = value;
                                   setState(() {});
                                 },
                               ),
-                              const SizedBox(height: 16),
-                              UgCommandTextField(
-                                controller: _indexController,
-                                label: "Index",
-                                keyboardType: TextInputType.number,
-                                textInputAction: TextInputAction.next,
-                              ),
-                              const SizedBox(height: 16),
-                              UgCommandTextField(
-                                controller: _dataController,
-                                label: "Data",
-                                textInputAction: TextInputAction.go,
-                              ),
+                              if (_selectedType?.value == "outputControl" || _selectedType?.value == "custom")
+                                const SizedBox(height: 16),
+                              if (_selectedType?.value == "outputControl")
+                                UgCommandTextField(
+                                  controller: _indexController,
+                                  label: "Index",
+                                  keyboardType: TextInputType.number,
+                                  textInputAction: TextInputAction.next,
+                                ),
+                              if (_selectedType?.value == "outputControl") const SizedBox(height: 16),
+                              if (_selectedType?.value == "custom" || _selectedType?.value == "outputControl")
+                                UgCommandTextField(
+                                  controller: _dataController,
+                                  label: "Data",
+                                  textInputAction: TextInputAction.go,
+                                ),
                             ],
                           ),
                       ],
@@ -190,12 +194,12 @@ class _DevicePageState extends ConsumerState<DevicePage> {
                             if ((_dropdownSavedCmdKey.currentState?.getSelectedItem as Command).id == 0) {
                               // Membuat objek Attributes baru dengan nilai dari text controller
                               Attributes newAttributes = Attributes(
-                                index: int.parse(_indexController.text),
-                                data: _dataController.text,
+                                index: (_indexController.text.isNotEmpty) ? int.parse(_indexController.text) : null,
+                                data: (_dataController.text.isNotEmpty) ? _dataController.text : null,
                               );
 
                               commandData = _selectedCommand?.copyWith(
-                                type: _selectedType,
+                                type: _selectedType?.value,
                                 attributes: newAttributes,
                               );
                             } else {

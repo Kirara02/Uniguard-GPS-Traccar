@@ -6,8 +6,8 @@ part 'attributes.g.dart';
 @freezed
 class Attributes with _$Attributes {
   factory Attributes({
-    required int index,
-    required String data,
+     int? index,
+     String? data,
   }) = _Attributes;
 
   factory Attributes.fromJson(Map<String, dynamic> json) => _$AttributesFromJson(json);

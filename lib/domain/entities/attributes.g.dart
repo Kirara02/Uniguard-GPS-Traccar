@@ -8,8 +8,8 @@ part of 'attributes.dart';
 
 _$AttributesImpl _$$AttributesImplFromJson(Map<String, dynamic> json) =>
     _$AttributesImpl(
-      index: (json['index'] as num).toInt(),
-      data: json['data'] as String,
+      index: (json['index'] as num?)?.toInt(),
+      data: json['data'] as String?,
     );
 
 Map<String, dynamic> _$$AttributesImplToJson(_$AttributesImpl instance) =>

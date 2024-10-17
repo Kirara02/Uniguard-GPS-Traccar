@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:gps_tracker/presentation/enums/drawer_page.dart';
 import 'package:gps_tracker/presentation/extensions/build_context_extension.dart';
 import 'package:gps_tracker/presentation/misc/app_routes.dart';
 import 'package:gps_tracker/presentation/misc/colors.dart';
 import 'package:gps_tracker/presentation/misc/typography.dart';
-import 'package:gps_tracker/presentation/providers/api/devices_provider.dart';
+import 'package:gps_tracker/presentation/pages/devices/devices_page.dart';
+import 'package:gps_tracker/presentation/pages/settings/settings_page.dart';
+import 'package:gps_tracker/presentation/providers/page/page_provider.dart';
 import 'package:gps_tracker/presentation/providers/routes/router_provider.dart';
 import 'package:gps_tracker/presentation/providers/user_data/user_data_provider.dart';
-import 'package:gps_tracker/presentation/widgets/common/device_ilist_tem.dart';
 import 'package:package_info_plus/package_info_plus.dart';
-import 'package:skeletonizer/skeletonizer.dart';
 
 class MainPage extends ConsumerStatefulWidget {
   const MainPage({super.key});
@@ -43,7 +44,7 @@ class _MainPageState extends ConsumerState<MainPage> {
 
   @override
   Widget build(BuildContext context) {
-    final devicesAsync = ref.watch(devicesProvider);
+    final selectedPage = ref.watch(pageProvider);
 
     ref.listen(
       userDataProvider,
@@ -59,52 +60,11 @@ class _MainPageState extends ConsumerState<MainPage> {
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
-          title: const Text("Devices"),
+          title: Text(selectedPage.title),
           scrolledUnderElevation: 0.0,
         ),
         drawer: _buildDrawer(context),
-        extendBodyBehindAppBar: true,
-        body: devicesAsync.when(
-          data: (devicesData) {
-            return ListView.separated(
-              shrinkWrap: true,
-              itemCount: devicesData.length,
-              separatorBuilder: (context, index) => Container(
-                height: 1,
-                color: AppColors.primaryExtraSoft,
-              ),
-              itemBuilder: (context, index) {
-                if (devicesData.isEmpty) {
-                  // return const HistoryItemSkeleton();
-                  return const Text("Empty");
-                } else {
-                  var item = devicesData[index];
-                  return DeviceListItem(device: item);
-                }
-              },
-            );
-          },
-          loading: () => ListView.builder(
-            itemCount: 10,
-            itemBuilder: (context, index) {
-              return Skeletonizer(
-                child: ListTile(
-                  title: Container(
-                    width: double.infinity,
-                    height: 20,
-                    color: Colors.grey,
-                  ),
-                  subtitle: Container(
-                    width: double.infinity,
-                    height: 16,
-                    color: Colors.grey,
-                  ),
-                ),
-              );
-            },
-          ),
-          error: (error, stack) => Center(child: Text("Terjadi kesalahan: $error")),
-        ),
+        body: _buildContent(selectedPage), // Konten dinamis
       ),
     );
   }
@@ -144,10 +104,19 @@ class _MainPageState extends ConsumerState<MainPage> {
             ),
           ),
           ListTile(
+            leading: const Icon(Icons.devices),
+            title: const Text('Devices'),
+            onTap: () {
+              ref.read(pageProvider.notifier).state = DrawerPage.devices;
+              Navigator.pop(context);
+            },
+          ),
+          ListTile(
             leading: const Icon(Icons.settings),
             title: const Text('Settings'),
             onTap: () {
-              // Handle navigation to settings.
+              ref.read(pageProvider.notifier).state = DrawerPage.settings;
+              Navigator.pop(context);
             },
           ),
           ListTile(
@@ -155,6 +124,7 @@ class _MainPageState extends ConsumerState<MainPage> {
             title: const Text('Logout'),
             onTap: () {
               ref.read(userDataProvider.notifier).logout();
+              Navigator.pop(context);
             },
           ),
           const Spacer(), // Pushes the footer to the bottom
@@ -173,4 +143,17 @@ class _MainPageState extends ConsumerState<MainPage> {
       ),
     );
   }
+
+  Widget _buildContent(DrawerPage selectedPage) {
+    switch (selectedPage) {
+      case DrawerPage.devices:
+        return const DevicesPage();
+      case DrawerPage.settings:
+        return const SettingsPage();
+      default:
+        return const DevicesPage();
+    }
+  }
+
+
 }
