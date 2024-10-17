@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 import 'package:gps_tracker/presentation/misc/constants.dart';
 import 'package:gps_tracker/presentation/misc/utils.dart';
 import 'package:pretty_dio_logger/pretty_dio_logger.dart';
@@ -23,14 +24,16 @@ class ApiClient {
       _dio.options.headers['Authorization'] = "Bearer $defaultToken";
     }
 
-    _dio.interceptors.add(PrettyDioLogger(
-      error: true,
-      requestHeader: true,
-      requestBody: true,
-      responseHeader: true,
-      responseBody: true,
-      request: true,
-    ));
+    if (kDebugMode) {
+      _dio.interceptors.add(PrettyDioLogger(
+        error: true,
+        requestHeader: true,
+        requestBody: true,
+        responseHeader: true,
+        responseBody: true,
+        request: true,
+      ));
+    }
   }
 
   Dio get dio => _dio;

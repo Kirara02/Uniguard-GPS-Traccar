@@ -12,45 +12,52 @@ class DevicesPage extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final devicesAsync = ref.watch(devicesProvider);
 
-    return devicesAsync.when(
-      data: (devicesData) {
-        return ListView.separated(
-          shrinkWrap: true,
-          itemCount: devicesData.length,
-          separatorBuilder: (context, index) => Container(
-            height: 1,
-            color: AppColors.primaryExtraSoft,
-          ),
-          itemBuilder: (context, index) {
-            if (devicesData.isEmpty) {
-              return const Text("Empty");
-            } else {
-              var item = devicesData[index];
-              return DeviceListItem(device: item);
-            }
-          },
-        );
-      },
-      loading: () => ListView.builder(
-        itemCount: 10,
-        itemBuilder: (context, index) {
-          return Skeletonizer(
-            child: ListTile(
-              title: Container(
-                width: double.infinity,
-                height: 20,
-                color: Colors.grey,
-              ),
-              subtitle: Container(
-                width: double.infinity,
-                height: 16,
-                color: Colors.grey,
-              ),
+    Future<void> _refreshDevices() async {
+      await ref.read(devicesProvider.notifier).getDevices();
+    }
+
+    return RefreshIndicator(
+      onRefresh: _refreshDevices,
+      child: devicesAsync.when(
+        data: (devicesData) {
+          return ListView.separated(
+            shrinkWrap: true,
+            itemCount: devicesData.length,
+            separatorBuilder: (context, index) => Container(
+              height: 1,
+              color: AppColors.primaryExtraSoft,
             ),
+            itemBuilder: (context, index) {
+              if (devicesData.isEmpty) {
+                return const Text("Empty");
+              } else {
+                var item = devicesData[index];
+                return DeviceListItem(device: item);
+              }
+            },
           );
         },
+        loading: () => ListView.builder(
+          itemCount: 10,
+          itemBuilder: (context, index) {
+            return Skeletonizer(
+              child: ListTile(
+                title: Container(
+                  width: double.infinity,
+                  height: 20,
+                  color: Colors.grey,
+                ),
+                subtitle: Container(
+                  width: double.infinity,
+                  height: 16,
+                  color: Colors.grey,
+                ),
+              ),
+            );
+          },
+        ),
+        error: (error, stack) => Center(child: Text("Terjadi kesalahan: $error")),
       ),
-      error: (error, stack) => Center(child: Text("Terjadi kesalahan: $error")),
     );
   }
 }
